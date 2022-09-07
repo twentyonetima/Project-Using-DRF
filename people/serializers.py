@@ -6,4 +6,5 @@ from people.models import People
 class PeopleSerializer(serializers.ModelSerializer):
     class Meta:
         model = People
-        fields = ('title', 'category_id')
+        fields = ('title', 'content', 'is_published', 'category')
+
