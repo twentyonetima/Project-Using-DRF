@@ -4,7 +4,9 @@ from people.models import People
 
 
 class PeopleSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = People
-        fields = ('title', 'content', 'is_published', 'category')
+        fields = "__all__"
 

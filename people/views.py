@@ -6,38 +6,28 @@ from django.shortcuts import render
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 
 from people.models import People, Category
+from people.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from people.serializers import PeopleSerializer
 
 
-class PeopleViewSet(mixins.CreateModelMixin,
-                    mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    mixins.ListModelMixin,
-                    GenericViewSet):
+class PeopleAPIList(generics.ListCreateAPIView):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
-
-    @action(methods=['get'], detail=False)
-    def category(self, request):
-        categories = Category.objects.all()
-        return Response({'categories': [c.name for c in categories]})
+    permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
-# class PeopleAPIList(generics.ListCreateAPIView):
-#     queryset = People.objects.all()
-#     serializer_class = PeopleSerializer
-#
-#
-# class PeopleAPIUpdate(generics.UpdateAPIView):
-#     queryset = People.objects.all()
-#     serializer_class = PeopleSerializer
-#
-#
-# class PeopleAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = People.objects.all()
-#     serializer_class = PeopleSerializer
+class PeopleAPIUpdate(generics.RetrieveUpdateAPIView):
+    queryset = People.objects.all()
+    serializer_class = PeopleSerializer
+    permission_classes = (IsOwnerOrReadOnly, )
+
+
+class PeopleAPIDetailView(generics.RetrieveDestroyAPIView):
+    queryset = People.objects.all()
+    serializer_class = PeopleSerializer
+    permission_classes = (IsAdminOrReadOnly, )
 
 
