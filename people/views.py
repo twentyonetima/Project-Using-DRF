@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 
 # Create your views here.
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -23,6 +24,7 @@ class PeopleAPIUpdate(generics.RetrieveUpdateAPIView):
     queryset = People.objects.all()
     serializer_class = PeopleSerializer
     permission_classes = (IsOwnerOrReadOnly, )
+    authentication_classes = (TokenAuthentication, )
 
 
 class PeopleAPIDetailView(generics.RetrieveDestroyAPIView):
